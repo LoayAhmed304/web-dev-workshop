@@ -81,7 +81,7 @@ body {
 .introduction {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
 }
 .intro-words {
   height: fit-content;
