@@ -5,10 +5,14 @@
   --button-color: #00ffff; /* Teal/Cyan */
   --secondary-text-color: #b0b0b0; /* Light Gray */
 }
-
+html,
 body {
+  margin: 0;
+  padding: 0;
+}
+.intro,
+.top {
   background-color: var(--background-color);
-  margin-bottom: 1000px;
   margin-top: 0;
   margin-right: 0;
   margin-left: 0;
@@ -53,12 +57,15 @@ body {
   margin-right: 10px;
 } */
 
+.intro {
+  height: 100dvh;
+  width: 100%;
+}
 .intro-block {
   display: flex;
   flex-direction: column-reverse;
   justify-content: center;
-  height: 90dvh;
-  padding-top: 60px;
+  padding-top: 90px;
   padding-left: 60px;
   padding-right: 50px;
 }
@@ -164,6 +171,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: start;
+    height: fit-content;
   }
   .intro-words {
     height: fit-content;
@@ -195,6 +203,7 @@ body {
       sans-serif;
     color: var(--secondary-text-color);
     font-weight: 400;
+    text-align: start;
   }
   .resume-button--intro {
     background-color: var(--button-color);
@@ -216,14 +225,16 @@ body {
     color: var(--secondary-text-color);
   }
 
+  .intro {
+    height: 100dvh;
+    width: 100%;
+  }
   .intro-block {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 100dvh;
-    padding-left: 60px;
-    padding-top: 120px;
-    padding-right: 50px;
+    height: fit-content;
+    padding-top: 90px;
   }
   .intro-block img {
     width: 500px;
@@ -235,6 +246,7 @@ body {
     position: relative;
     display: inline-block;
     z-index: 0;
+    height: fit-content;
   }
   .glowing-image {
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.7),
