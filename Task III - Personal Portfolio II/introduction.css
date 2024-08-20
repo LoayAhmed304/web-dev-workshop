@@ -44,9 +44,31 @@ body {
 }
 
 .right-bar {
+  display: none;
+}
+.hamburger-menu {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+
+  justify-content: center;
+  margin-right: 30px;
+}
+.top-element {
+  width: 30px;
+  height: 2px;
+  background-color: var(--secondary-text-color);
+  margin-bottom: 10px;
+}
+.middle-element {
+  width: 30px;
+  height: 2px;
+  background-color: var(--secondary-text-color);
+  margin-bottom: 10px;
+}
+.bottom-element {
+  width: 30px;
+  height: 2px;
+  background-color: var(--secondary-text-color);
 }
 /* .right-bar button {
   width: 60px;
@@ -144,7 +166,7 @@ body {
 */
 
 /* Medium Devices */
-@media only screen and (min-width: 768px) {
+@media (min-width: 768px) {
   .top-bar {
     height: 80px;
   }
@@ -252,6 +274,11 @@ body {
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.7),
       /* Outer glow */ 0 0 50px rgba(0, 255, 255, 0.5),
       /* Middle glow */ 0 0 100px rgba(0, 255, 255, 0.3); /* Inner glow */
+  }
+  .right-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 }
 
