@@ -10,6 +10,7 @@ body {
   margin: 0;
   padding: 0;
 }
+
 .intro,
 .top {
   background-color: var(--background-color);
@@ -283,5 +284,9 @@ body {
 }
 
 /* Small Devices */
-@media only screen and(min-width: 480px) {
+@media only screen and (min-width: 480px) {
+}
+
+.hidden {
+  display: none;
 }
