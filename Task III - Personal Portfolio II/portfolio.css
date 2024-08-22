@@ -58,6 +58,10 @@
   height: 450px;
   background-color: var(--primary-text-color-portfolio);
   border-radius: 10px;
+  transition: transform ease 0.6s;
+}
+.project-block:hover {
+  transform: translateY(-30px);
 }
 .project-block img {
   width: 300px;
