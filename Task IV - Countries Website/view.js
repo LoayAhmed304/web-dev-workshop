@@ -1,5 +1,6 @@
 class View {
   parentElement = document.querySelector(".crads-box");
+  loaded = false;
 
   renderSearchedValue(callback) {
     const searchCountry = document.querySelector(".search-form");
@@ -7,7 +8,7 @@ class View {
       e.preventDefault();
       const countryRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
       const val = document.querySelector(".search-input").value;
-      console.log(val);
+      if (!val) return;
       if (countryRegex.test(val)) callback("", val);
       else if (!val) callback();
       else {
@@ -41,8 +42,8 @@ class View {
   }
   backHandler() {
     document.querySelector(".back-container").addEventListener("click", (e) => {
-      e.preventDefault();
       document.location.hash = "";
+      searchResult.innerHTML = "";
       main.classList.toggle("hidden");
       searchResult.classList.toggle("hidden");
     });
@@ -126,9 +127,15 @@ class View {
     );
     return html;
   }
-  handlers(event) {
-    window.addEventListener("hashchange", event);
-    window.addEventListener("load", event);
+  async handlers(callbackLoad, callbackSave) {
+    window.addEventListener("hashchange", callbackLoad);
+    window.addEventListener("load", async () => {
+      if (!this.loaded) {
+        await callbackSave();
+        this.loaded = true;
+      }
+      callbackLoad();
+    });
   }
 }
 
