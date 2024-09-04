@@ -108,6 +108,7 @@ a {
   justify-content: center;
   margin-bottom: 20px;
   z-index: 0;
+  margin-top: 30px;
 }
 .glowing-image {
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.7),
@@ -122,7 +123,7 @@ a {
 }
 .intro-words {
   height: fit-content;
-  font-size: 30px;
+  font-size: 25px;
 
   color: lightgrey;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
@@ -130,10 +131,11 @@ a {
   margin-bottom: 0;
 }
 .welcome--intro {
-  font-size: 30px;
+  font-size: 20px;
 }
 .title--intro {
-  font-size: 20px;
+  font-size: 18px;
+  margin-top: 20px;
   display: block;
 }
 .colored-title--intro {
