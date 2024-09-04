@@ -21,6 +21,6 @@ fs.watch(folderName, (eventType, fileName) => {
     });
   }
 });
-fs.watchFile(folderName, { persistent: true, interval: 500 }, (cur, prev) => {
+fs.watchFile(folderName, { persistent: true, interval: 100 }, (cur, prev) => {
   console.log(`At: ${cur.mtime}`);
 });
