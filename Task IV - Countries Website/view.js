@@ -1,54 +1,104 @@
 class View {
-  parentElement = document.querySelector(".crads-box");
-  loaded = false;
+  // Setting some useful/needed HTML elements
+  #parentElement = document.querySelector(".crads-box");
+  #searchForm = document.querySelector(".search-form");
+  #searchArea = document.querySelector(".search-input");
+  #filterArea = document.getElementById("filter");
+  #resultElement = document.querySelector(".search-result");
+  #mainElement = document.querySelector("main");
 
+  // Storing values to be restored upon pages navigation
+  #loaded = false;
+  #filterValue = "All";
+  #searchValue = "";
+
+  /**
+   * Keeps scraping the search box and renders countries starting with the entered value
+   * @param {function} callback
+   */
   renderSearchedValue(callback) {
-    const searchCountry = document.querySelector(".search-form");
-    document.querySelector(".search-input").addEventListener("keyup", (e) => {
+    this.#searchForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const countryRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
-      const val = document.querySelector(".search-input").value;
-      if (!val) return;
-      if (countryRegex.test(val)) callback("", val);
-      else if (!val) callback();
+    });
+
+    this.#searchArea.addEventListener("keyup", (e) => {
+      const countryRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/; // Regex to check for valid input (only chars)
+      const val = this.#searchArea.value; // Stores the search value
+
+      if (countryRegex.test(val))
+        callback(this.#filterArea.value, val); // If valid input
+      else if (!val) callback(this.#filterArea.value); // else, renders all
       else {
-        document.querySelector(".search-input").value = "";
-        document.querySelector(".search-input").placeholder =
-          "Invalid Country Name";
+        this.#searchArea.value = "";
+        this.#searchArea.placeholder = "Invalid Country Name";
       }
     });
   }
+
+  /**
+   * Renders countries with the filter value properties (continent)
+   * @param {function} callback
+   */
   renderFilteredValue(callback) {
-    const selectedFilter = document.getElementById("filter");
-    selectedFilter.addEventListener("change", (e) => {
+    this.#filterArea.addEventListener("change", (e) => {
+      if (e.target.value === "All") return callback();
       callback(e.target.value);
     });
   }
-  renderAllCountries(countries) {
-    document.querySelector(".search-result").classList.add("hidden");
-    document.querySelector("main").classList.remove("hidden");
-    this.parentElement.innerHTML = "";
-    Array.from(countries).forEach((country) => {
-      this.parentElement.innerHTML += this.generateAllMarkup(country);
-    });
-  }
-  renderResult(country) {
-    document.querySelector("main").classList.add("hidden");
 
-    const resultContainer = document.querySelector(".search-result");
-    resultContainer.classList.remove("hidden");
-    resultContainer.innerHTML = "";
-    resultContainer.innerHTML += this.generateResultMarkup(country);
+  /**
+   * Renders all countries objects given
+   * @param {Object[]} countries
+   */
+  renderAllCountries(countries) {
+    this.#resultElement.classList.add("hidden");
+    this.#mainElement.classList.remove("hidden");
+    this.#parentElement.innerHTML = "";
+    let markup = "";
+    Array.from(countries).forEach((country) => {
+      markup += this.#generateAllMarkup(country);
+    });
+
+    this.#parentElement.insertAdjacentHTML("beforeend", markup);
   }
+
+  /**
+   *
+   * @param {object} country
+   */
+  renderResult(country) {
+    this.#filterValue = this.#filterArea.value;
+    this.#searchValue = this.#searchArea.value;
+
+    this.#mainElement.classList.add("hidden");
+    this.#resultElement.classList.remove("hidden");
+
+    const markup = this.#generateResultMarkup(country);
+
+    this.#resultElement.innerHTML = "";
+    this.#resultElement.insertAdjacentHTML("beforeend", markup);
+  }
+
+  /**
+   * Resets the hash value upon clicking on the back button
+   * Restores the main page with the previous search & filter values
+   */
   backHandler() {
     document.querySelector(".back-container").addEventListener("click", (e) => {
+      this.#filterArea.value = this.#filterValue;
       document.location.hash = "";
-      searchResult.innerHTML = "";
-      main.classList.toggle("hidden");
-      searchResult.classList.toggle("hidden");
+      this.#resultElement.innerHTML = "";
+      this.#mainElement.classList.toggle("hidden");
+      this.#resultElement.classList.toggle("hidden");
     });
   }
-  generateAllMarkup(country) {
+
+  /**
+   *
+   * @param {object} country
+   * @returns {markup}
+   */
+  #generateAllMarkup(country) {
     return `
     <a href="#${country.ccn3}">
     <div class="card">
@@ -69,13 +119,26 @@ class View {
           </a>
             `;
   }
-  getNativeName(nativeName, cur = "") {
+
+  /**
+   * Returns the country native name or its currency(ies)
+   * @param {string} nativeName
+   * @param {string | Array<string>} cur
+   * @returns {Array<string> | string}
+   */
+  #getNativeName(nativeName, cur = "") {
     const [_, obj] = Object.entries(nativeName)[0];
     if (cur === "cur") return obj.name;
     if (cur === "lang") return obj.split(",");
     return obj.common;
   }
-  generateResultMarkup(country) {
+
+  /**
+   * Generates country result markup
+   * @param {object} country
+   * @returns {markup}
+   */
+  #generateResultMarkup(country) {
     return `
         <div class="back-container">
         <button>Back</button>
@@ -91,7 +154,7 @@ class View {
         <div class="details-container">
           <h1>${country.name.common}</h1>
           <div class="country-details--grid">
-            <p><span class="key">Native Name</span>: ${this.getNativeName(
+            <p><span class="key">Native Name</span>: ${this.#getNativeName(
               country.name.nativeName
             )}</p>
             <p><span class="key">Population</span>: ${country.population}</p>
@@ -101,24 +164,30 @@ class View {
             }</p>
             <p><span class="key">Capital</span>: ${country.capital}</p>
             <p><span class="key">Top Level Domain</span>: ${country.tld[0]}</p>
-            <p><span class="key">Currencies</span>: ${this.getNativeName(
+            <p><span class="key">Currencies</span>: ${this.#getNativeName(
               country.currencies,
               "cur"
             )}</p>
-            <p><span class="key">Languages</span>: ${this.getNativeName(
+            <p><span class="key">Languages</span>: ${this.#getNativeName(
               country.languages,
               "lang"
             )}</p>
           </div>
           <div class="country-borders">
             <div class="key">Border Countries:</div>
-            ${this.generateBorders(country.borders)}
+            ${this.#generateBorders(country.borders)}
           </div>
         </div>
       </div>
     `;
   }
-  generateBorders(borders) {
+
+  /**
+   * Generates borders boxes markup
+   * @param {Array<object> | null} borders
+   * @returns {markup}
+   */
+  #generateBorders(borders) {
     if (!borders) return `<div class="boxing">NONE</div>`;
     let html = ``;
     borders.forEach(
@@ -127,12 +196,21 @@ class View {
     );
     return html;
   }
-  async handlers(callbackLoad, callbackSave) {
-    window.addEventListener("hashchange", callbackLoad);
+
+  /**
+   * Sets main event handlers
+   * @param {function} callbackLoad
+   * @param {function} callbackInit
+   */
+  handlers(callbackLoad, callbackInit) {
+    window.addEventListener("hashchange", () => {
+      callbackLoad(this.#filterValue, this.#searchValue);
+    });
+
     window.addEventListener("load", async () => {
-      if (!this.loaded) {
-        await callbackSave();
-        this.loaded = true;
+      if (!this.#loaded) {
+        await callbackInit();
+        this.#loaded = true;
       }
       callbackLoad();
     });

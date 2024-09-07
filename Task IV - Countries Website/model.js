@@ -1,8 +1,17 @@
-export let countries;
-export async function saveAll() {
-  countries = await getJSON("https://restcountries.com/v3.1/all");
+export const state = {};
+
+/**
+ * Initial function to store all countries in the state object
+ */
+export async function stateInit() {
+  state.countries = await getJSON(`https://restcountries.com/v3.1/all`);
 }
 
+/**
+ * Helper fetching function
+ * @param {URL} url
+ * @returns {Promise<object>}
+ */
 async function getJSON(url) {
   try {
     const response = await fetch(url);
@@ -14,16 +23,30 @@ async function getJSON(url) {
     throw err;
   }
 }
+
+/**
+ * Returns all countries with the query properties if exist
+ * @param {string | null} filter
+ * @param {string | null} search
+ * @returns {Array<object>}
+ */
 export function getAll(filter, search) {
-  const data = countries;
-  if (!filter && !search)
+  const data = state.countries;
+
+  if ((!filter || filter === "All") && !search) {
     return data.filter((el) => el.name.common !== "Israel");
-  //
-  else if (filter && !search)
+  } else if (filter && !search) {
     return data.filter(
       (el) => el.name.common !== "Israel" && el.continents[0] === filter
     );
-  else {
+  } else if (filter && search && filter !== "All") {
+    return data.filter(
+      (el) =>
+        el.name.common !== "Israel" &&
+        el.continents[0] === filter &&
+        el.name.common.toLowerCase().startsWith(search.toLowerCase())
+    );
+  } else {
     return data.filter(
       (el) =>
         el.name.common !== "Israel" &&
@@ -32,7 +55,15 @@ export function getAll(filter, search) {
   }
 }
 
-export async function getCountry(ccn3) {
-  const country = await getJSON(`https://restcountries.com/v3.1/alpha/${ccn3}`);
-  return country[0];
+/**
+ *
+ * @param {number} code
+ * @returns {object}
+ */
+export function getCountry(code) {
+  if (!Number.isNaN(+code)) {
+    return state.countries.find((el) => el.ccn3 == code);
+  }
+  return state.countries.find((el) => el.cca3 == code);
+  // return await getJSON(`https://restcountries.com/v3.1/alpha/${code}`);
 }
